@@ -4,7 +4,7 @@ import os
 myapp = Flask(__name__)
 
 myapp.config['MYSQL_HOST'] = 'swapnil-jangam-server.database.windows.net'
-myapp.config['MYSQL_USER'] = 'swapniljangam'
+myapp.config['MYSQL_USER'] = 'swapniljangam@swapnil-jangam-server'
 myapp.config['MYSQL_PASSWORD'] = 'Kingarhur4'
 myapp.config['MYSQL_DB'] = 'mydatabase'
 
