@@ -3,8 +3,8 @@ from flask_mysqldb import MySQL
 import os
 myapp = Flask(__name__)
 
-myapp.config['MYSQL_HOST'] = 'swapnil-jangam-server.database.windows.net'
-myapp.config['MYSQL_USER'] = 'swapniljangam@swapnil-jangam-server'
+myapp.config['MYSQL_HOST'] = 'swapnilserver.mysql.database.azure.com'
+myapp.config['MYSQL_USER'] = 'swapniljangam@swapnilserver'
 myapp.config['MYSQL_PASSWORD'] = 'Kingarhur4'
 myapp.config['MYSQL_DB'] = 'mydatabase'
 
@@ -33,5 +33,5 @@ def hello():
 #     cur.close()
 #     return "Successfully deleted all data"
 
-# if __name__ == '__main__':
-#     myapp.run(host='0.0.0.0', port=port, debug=True)
+if __name__ == '__main__':
+    myapp.run(host='0.0.0.0', port=port, debug=True)
