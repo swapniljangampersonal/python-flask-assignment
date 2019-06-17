@@ -22,7 +22,7 @@ def hello():
     #     res = 'No connection to db'
     # else:
     #     res = 'DB connected'
-    return render_template("static/index.html", result=res)
+    return render_template("index.html", result=res)
 
 # @myapp.route('/delete', methods=['GET'])
 # def deleteall():
@@ -33,5 +33,5 @@ def hello():
 #     cur.close()
 #     return "Successfully deleted all data"
 
-# if __name__ == '__main__':
-#     myapp.run(host='0.0.0.0', port=port, debug=True)
+if __name__ == '__main__':
+    myapp.run(host='0.0.0.0', port=port, debug=True)
