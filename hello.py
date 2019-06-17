@@ -11,8 +11,8 @@ myapp.config['MYSQL_DB'] = 'mydatabase'
 mysql = MySQL(myapp)
 port = int(os.getenv("PORT", 5000))
 
-# def get_connection():
-#     return mysql.connection
+def get_connection():
+    return mysql.connection
 
 @myapp.route("/")
 def hello():
