@@ -16,6 +16,7 @@ def hello():
         res = 'No connection to db'
     else:
         res = 'DB connected'
+    conn.close()
     return render_template("index.html", result=res)
 
 @myapp.route('/delete', methods=['GET'])
@@ -25,6 +26,7 @@ def deleteall():
     cur.execute("DELETE FROM earthquake")
     conn.commit()
     cur.close()
+    conn.close()
     return "Successfully deleted all data"
 
 # if __name__ == '__main__':
