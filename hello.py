@@ -16,12 +16,12 @@ def get_connection():
 
 @myapp.route("/")
 def hello():
-    conn = get_connection()
-    res = 'Hi'
-    if not conn:
-        res = 'No connection to db'
-    else:
-        res = 'DB connected'
+    # conn = get_connection()
+    # res = 'Hi'
+    # if not conn:
+    #     res = 'No connection to db'
+    # else:
+    #     res = 'DB connected'
     return render_template("index.html", result=res)
 
 # @myapp.route('/delete', methods=['GET'])
