@@ -33,5 +33,5 @@ def deleteall():
     cur.close()
     return "Successfully deleted all data"
 
-if __name__ == '__main__':
-    myapp.run(host='0.0.0.0', port=port, debug=True)
+# if __name__ == '__main__':
+#     myapp.run(host='0.0.0.0', port=port, debug=True)
