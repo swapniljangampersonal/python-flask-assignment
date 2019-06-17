@@ -18,14 +18,14 @@ def hello():
         res = 'DB connected'
     return render_template("index.html", result=res)
 
-# @myapp.route('/delete', methods=['GET'])
-# def deleteall():
-#     conn = get_connection()
-#     cur = conn.cursor()
-#     cur.execute("DELETE FROM earthquake")
-#     conn.commit()
-#     cur.close()
-#     return "Successfully deleted all data"
+@myapp.route('/delete', methods=['GET'])
+def deleteall():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM earthquake")
+    conn.commit()
+    cur.close()
+    return "Successfully deleted all data"
 
 # if __name__ == '__main__':
 #     myapp.run(host='0.0.0.0', port=port, debug=True)
