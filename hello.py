@@ -17,7 +17,7 @@ def get_connection():
 @myapp.route("/")
 def hello():
     conn = get_connection()
-    res = ''
+    res = 'Hi'
     if not conn:
         res = 'No connection to db'
     else:
