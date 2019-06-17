@@ -1,27 +1,21 @@
 from flask import Flask, render_template, request
-from flask_mysqldb import MySQL
+import sqlite3
 import os
 myapp = Flask(__name__)
 
-myapp.config['MYSQL_HOST'] = 'swapnilserver.mysql.database.azure.com'
-myapp.config['MYSQL_USER'] = 'swapniljangam@swapnilserver'
-myapp.config['MYSQL_PASSWORD'] = 'Kingarhur4'
-myapp.config['MYSQL_DB'] = 'mydatabase'
-
-mysql = MySQL(myapp)
-port = int(os.getenv("PORT", 5000))
-
 def get_connection():
-    return mysql.connection
+    return sqlite3.connect('static/earth.db')
+
+port = int(os.getenv("PORT", 5000))
 
 @myapp.route("/")
 def hello():
-    # conn = get_connection()
-    # res = 'Hi'
-    # if not conn:
-    #     res = 'No connection to db'
-    # else:
-    #     res = 'DB connected'
+    conn = get_connection()
+    res = 'Hi'
+    if not conn:
+        res = 'No connection to db'
+    else:
+        res = 'DB connected'
     return render_template("index.html", result=res)
 
 # @myapp.route('/delete', methods=['GET'])
