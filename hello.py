@@ -203,7 +203,7 @@ def upload_csv():
         sin_lat = math.sin(rad_lat * math.pi / 180)
         cos_long = math.cos(rad_long * math.pi / 180)
         sin_long = math.sin(rad_long * math.pi / 180)
-        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(net)+"', '"+str(earthquake_id)+"', %s'" + ");",[place])
+        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(net)+"', '"+str(earthquake_id)+"', %s" + ");",[place])
         conn.commit()
     cur.close()
     return render_template("first.html")
