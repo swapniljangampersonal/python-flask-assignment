@@ -229,7 +229,7 @@ def getlatrangetimes():
     while i < len(my_range):
         if(i+1 >= len(my_range)):
             break
-        rangelist.append(my_range[i], my_range[i+1])
+        rangelist.append([my_range[i], my_range[i+1]])
     times = request.args['times']
     times = int(times)
     resultlist = []
