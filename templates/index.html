@@ -8,12 +8,14 @@
             <h1>Jangam, Swapnil Surendra</h1>
             <h3>1001550608</h3>
         </center>
-        {{ result }}
         <form action="/earthquake" method="GET">
             <button class="btn btn-primary" type="submit">Show all data</button>
         </form>
         <form action="/delete" method="GET">
             <button class="btn btn-primary" type="submit">Delete all data</button>
+        </form>
+        <form action="/create-table" method="GET">
+            <button class="btn btn-primary" type="submit">Create table</button>
         </form>
         <form action="/csv" method="POST" enctype="multipart/form-data">
             <div class="input-group mb-3">
@@ -25,6 +27,18 @@
                     <button class="input-group-text" id="" type="submit">Upload</button>
                 </div>
             </div>
+        </form>
+        <form action="/random-queries" method="GET">
+            <button class="btn btn-primary" type="submit">Restricted Random Queries</button>
+        </form>
+        <form action="/unrestricted-random-queries" method="GET">
+            <button class="btn btn-primary" type="submit">Unrestricted Random Queries</button>
+        </form>
+        <form action="/random-queries-cached" method="GET">
+            <button class="btn btn-primary" type="submit">Restricted Random Queries</button>
+        </form>
+        <form action="/unrestricted-random-queries-cached" method="GET">
+            <button class="btn btn-primary" type="submit">Unrestricted Random Queries</button>
         </form>
     </body>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

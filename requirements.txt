@@ -1,2 +1,7 @@
 Flask
 flask_mysqldb
+timezonefinder
+python-dateutil
+pytz
+numpy
+redis
