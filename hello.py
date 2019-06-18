@@ -38,7 +38,7 @@ def createTable():
     cur.execute("Drop table earthquake")
     conn.commit()
     start_time = datetime.now()
-    cur.execute("create table earthquake (time datetime, latitude DECIMAL(20, 15), longitude DECIMAL(20, 15),depth DECIMAL(40, 20),mag DECIMAL(40, 20),net varchar(10),id varchar(50),place varchar(200), rad_lat DECIMAL(40, 20), rad_long DECIMAL(40, 20), cos_lat DECIMAL(40, 20), sin_lat DECIMAL(40, 20), cos_long DECIMAL(40, 20), sin_long DECIMAL(40, 20));")
+    cur.execute("create table earthquake (time datetime, latitude DECIMAL(20, 15), longitude DECIMAL(20, 15),depth DECIMAL(40, 20),mag DECIMAL(40, 20),net varchar(10),id varchar(50),place varchar(200));")
     conn.commit()
     end_time = datetime.now()
     total_time = end_time - start_time
@@ -203,7 +203,7 @@ def upload_csv():
         sin_lat = math.sin(rad_lat * math.pi / 180)
         cos_long = math.cos(rad_long * math.pi / 180)
         sin_long = math.sin(rad_long * math.pi / 180)
-        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(net)+"', '"+str(earthquake_id)+"', %s, '" + str(rad_lat)+", "+str(rad_long)+", "+ str(cos_lat)+", "+ str(sin_lat)+", "+ str(cos_long)+", "+ str(sin_long) +");",[place])
+        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(net)+"', '"+str(earthquake_id)+"', %s'" + ");",[place])
         conn.commit()
     cur.close()
     return render_template("first.html")
