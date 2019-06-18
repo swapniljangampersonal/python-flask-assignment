@@ -157,8 +157,8 @@ def deleteall():
 def getlatrange():
     conn = get_connection()
     cur = conn.cursor()
-    latFrom = request.form['latFrom']
-    latTo = request.form['latTo']
+    latFrom = request.args['latFrom']
+    latTo = request.args['latTo']
     cur.execute("SELECT place, time, mag from earthquake WHERE latitude BETWEEN "+ str(latFrom) +" AND "+ str(latTo))
     res = cur.fetchall()
     return render_template("test.html", result=res)
