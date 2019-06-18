@@ -197,5 +197,5 @@ def get_timezone_date(longitude, latitude, dt):
     localDatetime = utcmoment.astimezone(pytz.timezone(str(mytimezone)))
     return localDatetime.strftime(fmt)[:-3]
 
-if __name__ == '__main__':
-    myapp.run(host='0.0.0.0', port=port, debug=True)
+# if __name__ == '__main__':
+#     myapp.run(host='0.0.0.0', port=port, debug=True)
