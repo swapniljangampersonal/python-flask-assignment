@@ -240,7 +240,7 @@ def getlatrangetimes():
         end_time = datetime.now()
         total_time = end_time - start_time
         res = cur.fetchall()
-        resultlist.append(res[0], total_time.total_seconds(), rangelist[ind][0], rangelist[ind][1])
+        resultlist.append([res[0], total_time.total_seconds(), rangelist[ind][0], rangelist[ind][1]])
     return render_template("test.html", result=resultlist)
 
 def get_timezone_date(longitude, latitude, dt):
