@@ -27,14 +27,15 @@
             <table id="employees" style="width:100%">
                     <tbody>
                         <tr>
-                            <th>Time</th>
+                            <th>Count</th>
                             <!-- <th>Latitude</th>
                             <th>Longitude</th>
                             <th>Depth</th> -->
-                            <th>Magnitude</th>
+                            <th>Time</th>
                             <!-- <th>Net</th>
                             <th>ID</th> -->
-                            <th>Place</th>
+                            <th>Range From</th>
+                            <th>Range To</th>
                         </tr>
         {% if result %}
             {% for row in result %}
@@ -42,6 +43,7 @@
                     <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
                     <!-- <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>

@@ -10,6 +10,7 @@ import random
 import redis
 import hashlib
 import pickle
+import numpy
 
 myapp = Flask(__name__)
 
@@ -220,11 +221,27 @@ def checklattimes():
 def getlatrangetimes():
     conn = get_connection()
     cur = conn.cursor()
-    latFrom = request.form['latFrom']
-    latTo = request.form['latTo']
-    cur.execute("SELECT place, time, mag from earthquake WHERE latitude BETWEEN "+ str(latFrom) +" AND "+ str(latTo))
-    res = cur.fetchall()
-    return render_template("test.html", result=res)
+    latFrom = request.args['latFrom']
+    latTo = request.args['latTo']
+    my_range = numpy.arange(float(latFrom), float(latTo), 0.8)
+    rangelist = []
+    i = 0
+    while i < len(my_range):
+        if(i+1 >= len(my_range)):
+            break
+        rangelist.append(my_range[i], my_range[i+1])
+    times = request.args['times']
+    times = int(times)
+    resultlist = []
+    for x in range(times):
+        ind = random.randint(0,len(rangelist) - 1) 
+        start_time = datetime.now()
+        cur.execute("SELECT count(*) from earthquake WHERE latitude BETWEEN "+ rangelist[ind][0] +" AND "+ rangelist[ind][1])
+        end_time = datetime.now()
+        total_time = end_time - start_time
+        res = cur.fetchall()
+        resultlist.append(res[0], total_time.total_seconds(), rangelist[ind][0], rangelist[ind][1])
+    return render_template("test.html", result=resultlist)
 
 def get_timezone_date(longitude, latitude, dt):
     tf = TimezoneFinder()
