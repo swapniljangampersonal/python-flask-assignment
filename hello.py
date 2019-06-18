@@ -38,7 +38,7 @@ def createTable():
     cur.execute("Drop table earthquake")
     conn.commit()
     start_time = datetime.now()
-    cur.execute("create table earthquake (time datetime, latitude DECIMAL(20, 15), longitude DECIMAL(20, 15),depth DECIMAL(40, 20),mag DECIMAL(40, 20),magType varchar(10),nst int(10),gap DECIMAL(25,10), dmin DECIMAL(40, 20),rms DECIMAL(40, 20),net varchar(10),id varchar(50),updated datetime,place varchar(200),mytype varchar(50),horizontalError DECIMAL(40, 20),depthError DECIMAL(40, 20),magError DECIMAL(40, 20),magNst int(10),status varchar(20),locationSource varchar(10),magSource varchar(10), rad_lat DECIMAL(40, 20), rad_long DECIMAL(40, 20), cos_lat DECIMAL(40, 20), sin_lat DECIMAL(40, 20), cos_long DECIMAL(40, 20), sin_long DECIMAL(40, 20));")
+    cur.execute("create table earthquake (time datetime, latitude DECIMAL(20, 15), longitude DECIMAL(20, 15),depth DECIMAL(40, 20),mag DECIMAL(40, 20),net varchar(10),id varchar(50),place varchar(200), rad_lat DECIMAL(40, 20), rad_long DECIMAL(40, 20), cos_lat DECIMAL(40, 20), sin_lat DECIMAL(40, 20), cos_long DECIMAL(40, 20), sin_long DECIMAL(40, 20));")
     conn.commit()
     end_time = datetime.now()
     total_time = end_time - start_time
@@ -153,13 +153,23 @@ def deleteall():
     cur.close()
     return "Successfully deleted all data"
 
+@myapp.route('/latrange', methods=['GET'])
+def getlatrange():
+    conn = get_connection()
+    cur = conn.cursor()
+    latFrom = request.form['latFrom']
+    latTo = request.form['latTo']
+    cur.execute("SELECT place, time, mag from earthquake WHERE latitude BETWEEN "+ str(latFrom) +" AND "+ str(latTo))
+    res = cur.fetchall()
+    return render_template("test.html", result=res)
+
 @myapp.route('/csv', methods=['POST'])
 def upload_csv():
     file = request.files['csvFile']
     target = os.path.join(APP_ROOT, 'static')
     file.save(os.path.join(target, file.filename))
     f = open(os.path.join(target, file.filename), "r")
-    reader = csv.DictReader( f, fieldnames = ( "time","latitude","longitude","depth","mag","magType","nst","gap","dmin","rms","net","id","updated","place","type","horizontalError","depthError","magError","magNst","status","locationSource","magSource"))
+    reader = csv.DictReader( f, fieldnames = ( "time","latitude","longitude","depth","mag","net","id","place"))
     conn = get_connection()
     cur = conn.cursor()
     next(reader, None)
@@ -170,33 +180,33 @@ def upload_csv():
         mytime = get_timezone_date(row['longitude'], row['latitude'], mytime.strftime("%Y-%m-%d %H:%M:%S.%f"))
         depth = row['depth'] if row['depth'] else float(0)
         mag = row['mag'] if row['mag'] else float(0)
-        magType = row["magType"] if row["magType"] else ''
-        nst = row["nst"] if row["nst"] else 0
-        gap = row["gap"] if row["gap"] else float(0)
-        dmin = row["dmin"] if row["dmin"] else 0
-        rms = row["rms"] if row["rms"] else float(0)
+        # magType = row["magType"] if row["magType"] else ''
+        # nst = row["nst"] if row["nst"] else 0
+        # gap = row["gap"] if row["gap"] else float(0)
+        # dmin = row["dmin"] if row["dmin"] else 0
+        # rms = row["rms"] if row["rms"] else float(0)
         net = row["net"] if row["net"] else ''
         earthquake_id = row["id"] if row["id"] else ''
-        updated = row["updated"] if row["updated"] else ''
+        # updated = row["updated"] if row["updated"] else ''
         place = row["place"] if row["place"] else ''
-        earthquake_type = row["type"] if row["type"] else ''
-        horizontalError = row["horizontalError"] if row["horizontalError"] else 0
-        depthError = row["depthError"] if row["depthError"] else 0
-        magError = row["magError"] if row["magError"] else 0
-        magNst = row["magNst"] if row["magNst"] else 0
-        status = row["status"] if row["status"] else ''
-        locationSource = row["locationSource"] if row["locationSource"] else ''
-        magSource = row["magSource"] if row["magSource"] else ''
+        # earthquake_type = row["type"] if row["type"] else ''
+        # horizontalError = row["horizontalError"] if row["horizontalError"] else 0
+        # depthError = row["depthError"] if row["depthError"] else 0
+        # magError = row["magError"] if row["magError"] else 0
+        # magNst = row["magNst"] if row["magNst"] else 0
+        # status = row["status"] if row["status"] else ''
+        # locationSource = row["locationSource"] if row["locationSource"] else ''
+        # magSource = row["magSource"] if row["magSource"] else ''
         rad_lat = float(row['latitude'])
         rad_long = float(row['longitude'])
         cos_lat = math.cos(rad_lat * math.pi / 180)
         sin_lat = math.sin(rad_lat * math.pi / 180)
         cos_long = math.cos(rad_long * math.pi / 180)
         sin_long = math.sin(rad_long * math.pi / 180)
-        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(magType)+"', "+str(nst)+", "+str(gap)+", "+str(dmin)+", "+str(rms)+", '"+str(net)+"', '"+str(earthquake_id)+"', '"+str(updated)+"', %s, '"+str(earthquake_type)+"', "+str(horizontalError)+", "+str(depthError)+", "+str(magError)+", "+str(magNst)+", '"+str(status)+"', '"+str(locationSource)+"', '"+str(magSource)+"', "+str(rad_lat)+", "+str(rad_long)+", "+ str(cos_lat)+", "+ str(sin_lat)+", "+ str(cos_long)+", "+ str(sin_long) +");",[place])
+        cur.execute("INSERT INTO earthquake VALUES ('"+ mytime +"', "+ str(latitude)+", "+str(longitude)+", "+str(depth)+", "+str(mag)+", '"+str(net)+"', '"+str(earthquake_id)+"', %s, '" + str(rad_lat)+", "+str(rad_long)+", "+ str(cos_lat)+", "+ str(sin_lat)+", "+ str(cos_long)+", "+ str(sin_long) +");",[place])
         conn.commit()
     cur.close()
-    return "Successfully uploaded"
+    return render_template("first.html")
 
 def get_timezone_date(longitude, latitude, dt):
     tf = TimezoneFinder()

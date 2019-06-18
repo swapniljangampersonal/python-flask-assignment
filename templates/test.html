@@ -28,11 +28,12 @@
                     <tbody>
                         <tr>
                             <th>Time</th>
-                            <th>Latitude</th>
+                            <!-- <th>Latitude</th>
                             <th>Longitude</th>
-                            <th>Depth</th>
+                            <th>Depth</th> -->
                             <th>Magnitude</th>
-                            <th>rms</th>
+                            <!-- <th>Net</th>
+                            <th>ID</th> -->
                             <th>Place</th>
                         </tr>
         {% if result %}
@@ -41,10 +42,10 @@
                     <td>{{ row[0] }}</td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
+                    <!-- <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td>{{ row[6] }}</td>
+                    <td>{{ row[6] }}</td> -->
                 </tr>
             {% endfor %}
         {% endif %}
