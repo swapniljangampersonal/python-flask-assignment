@@ -208,6 +208,24 @@ def upload_csv():
     cur.close()
     return render_template("first.html")
 
+@myapp.route('/checklat', methods=['GET'])
+def checklat():
+    return render_template("first.html")
+
+@myapp.route('/checklattimes', methods=['GET'])
+def checklattimes():
+    return render_template("second.html")
+
+@myapp.route('/latrangetimes', methods=['GET'])
+def getlatrangetimes():
+    conn = get_connection()
+    cur = conn.cursor()
+    latFrom = request.form['latFrom']
+    latTo = request.form['latTo']
+    cur.execute("SELECT place, time, mag from earthquake WHERE latitude BETWEEN "+ str(latFrom) +" AND "+ str(latTo))
+    res = cur.fetchall()
+    return render_template("test.html", result=res)
+
 def get_timezone_date(longitude, latitude, dt):
     tf = TimezoneFinder()
     fmt = "%Y-%m-%d %H:%M:%S.%f"
