@@ -50,7 +50,7 @@ def get_random_queries():
     cur = conn.cursor()
     start_time = datetime.now()
     for x in range(1000):
-        sql = "SELECT * FROM earthquake WHERE mag < "+ str(round(random.uniform(1.2, 8.0), 3))
+        sql = "SELECT * FROM earthquake WHERE mag = "+ str(round(random.uniform(1.2, 8.0), 1))
         hash = hashlib.sha224(sql.encode('utf-8')).hexdigest()
         key = "sql_cache:" + hash
         cur.execute(sql)
@@ -88,7 +88,7 @@ def get_random_queries_cached():
     cur = conn.cursor()
     start_time = datetime.now()
     for x in range(1000):
-        sql = "SELECT * FROM earthquake WHERE mag < "+ str(round(random.uniform(1.2, 8.0), 1))
+        sql = "SELECT * FROM earthquake WHERE mag = "+ str(round(random.uniform(1.2, 8.0), 1))
         hash = hashlib.sha224(sql.encode('utf-8')).hexdigest()
         key = "sql_cache:" + hash
         # Check if data is in cache.
