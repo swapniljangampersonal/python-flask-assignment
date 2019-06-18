@@ -50,7 +50,13 @@ def get_random_queries():
     cur = conn.cursor()
     start_time = datetime.now()
     for x in range(1000):
-        cur.execute("SELECT * FROM earthquake WHERE mag < "+ str(round(random.uniform(1.2, 8.0), 3)))
+        sql = "SELECT * FROM earthquake WHERE mag < "+ str(round(random.uniform(1.2, 8.0), 3))
+        hash = hashlib.sha224(sql.encode('utf-8')).hexdigest()
+        key = "sql_cache:" + hash
+        cur.execute(sql)
+        data = cur.fetchall()
+        if r.get(key) is None:
+            r.set(key, pickle.dumps(data))
     end_time = datetime.now()
     total_time = end_time - start_time
     return "Random 1000 queries executed in " + str(total_time.total_seconds()) + " secs"
@@ -65,7 +71,13 @@ def unrestricted_random_queries():
     cur = conn.cursor()
     start_time = datetime.now()
     for x in range(1000):
-        cur.execute(queries[random.randint(0,len(queries) - 1)])
+        sql = queries[random.randint(0,len(queries) - 1)]
+        hash = hashlib.sha224(sql.encode('utf-8')).hexdigest()
+        key = "sql_cache:" + hash
+        cur.execute(sql)
+        data = cur.fetchall()
+        if r.get(key) is None:
+            r.set(key, pickle.dumps(data))
     end_time = datetime.now()
     total_time = end_time - start_time
     return "Restricted random 1000 queries executed in " + str(total_time.total_seconds()) + " secs"
@@ -86,8 +98,6 @@ def get_random_queries_cached():
             # Do MySQL query   
             cur.execute(sql)
             data = cur.fetchall()
-            
-            # Put data into cache for 1 hour
             r.set(key, pickle.dumps(data))
     r.flushall()
     end_time = datetime.now()
@@ -115,17 +125,19 @@ def unrestricted_random_queries_cached():
             # Do MySQL query   
             cur.execute(sql)
             data = cur.fetchall()
-            
-            # Put data into cache for 1 hour
             r.set(key, pickle.dumps(data))
     r.flushall()
     end_time = datetime.now()
     total_time = end_time - start_time
     return "Restricted random 1000 queries executed in " + str(total_time.total_seconds()) + " secs"
 
+@myapp.route('/clear-cache', methods=['GET'])
+def earthquakes():
+    r.flushall()
+    return "Cache cleared"
 
 @myapp.route('/earthquake', methods=['GET'])
-def earthquakes():
+def clearcache():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT * FROM earthquake")
