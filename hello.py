@@ -6,11 +6,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
 from timezonefinder import TimezoneFinder
-import random
-import redis
-import hashlib
-import pickle
-import numpy
+import random, redis, hashlib, pickle, numpy
 
 myapp = Flask(__name__)
 
@@ -138,12 +134,41 @@ def earthquakes():
     return "Cache cleared"
 
 @myapp.route('/earthquake', methods=['GET'])
-def clearcache():
+def get_earthquakes():
+    mag_from = request.args['magFrom'] if 'magFrom' in request.args else ''
+    mag_to = request.args['magTo'] if 'magTo' in request.args else ''
+    days = request.args['days'] if 'days' in request.args else ''
+    latitude = request.args['lat'] if 'lat' in request.args else ''
+    longitude = request.args['long'] if 'long' in request.args else ''
+    distance = request.args['distance'] if 'distance' in request.args else ''
+    CUR_cos_lat = ''
+    CUR_sin_lat = ''
+    CUR_cos_lng = ''
+    CUR_sin_lng = ''
+    cos_allowed_distance = ''
+    if latitude and longitude and distance:
+        # latitude = math.radians(float(latitude))
+        # longitude = math.radians(float(longitude))
+        CUR_cos_lat = math.cos(float(latitude) * math.pi / 180)
+        CUR_sin_lat = math.sin(float(latitude) * math.pi / 180)
+        CUR_cos_lng = math.cos(float(longitude) * math.pi / 180)
+        CUR_sin_lng = math.sin(float(longitude) * math.pi / 180)
+        cos_allowed_distance = math.cos(float(distance) / 6371) # This is in KM
+        print("CUR_cos_lat: " + str(CUR_cos_lat))
+        print("CUR_sin_lat: " + str(CUR_sin_lat))
+        print("CUR_cos_lng: " + str(CUR_cos_lng))
+        print("CUR_sin_lng: " + str(CUR_sin_lng))
+        print("cos_allowed_distance: " + str(cos_allowed_distance))
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM earthquake")
+    cur.execute("""SELECT time,latitude,longitude,depth,mag,rms,place FROM earthquake 
+                WHERE (? = '' or ? = '' or mag BETWEEN ? AND ?) 
+                AND 
+                (? = '' or time BETWEEN date('now', '-? days') AND date('now')) 
+                AND 
+                (? = '' OR ? * sin_lat + ? * cos_lat * (cos_long * ? + sin_long * ?) > ?)""", (mag_from, mag_to, mag_from, mag_to, days, days, CUR_sin_lat, CUR_sin_lat, CUR_cos_lat, CUR_cos_lng, CUR_sin_lng, cos_allowed_distance))
     res = cur.fetchall()
-    return render_template("test.html", result=res)
+    return render_template('test.html', result=res, content_type='application/json')
 
 @myapp.route('/delete', methods=['GET'])
 def deleteall():
@@ -230,17 +255,54 @@ def getlatrangetimes():
         if(i+1 >= len(my_range)):
             break
         rangelist.append([my_range[i], my_range[i+1]])
+        i = i + 1
     times = request.args['times']
     times = int(times)
     resultlist = []
     for x in range(times):
         ind = random.randint(0,len(rangelist) - 1) 
         start_time = datetime.now()
-        cur.execute("SELECT count(*) from earthquake WHERE latitude BETWEEN "+ rangelist[ind][0] +" AND "+ rangelist[ind][1])
+        cur.execute("SELECT count(*) from earthquake WHERE latitude BETWEEN "+ str(rangelist[ind][0]) +" AND "+ str(rangelist[ind][1]))
         end_time = datetime.now()
         total_time = end_time - start_time
-        res = cur.fetchall()
+        res = cur.fetchone()
         resultlist.append([res[0], total_time.total_seconds(), rangelist[ind][0], rangelist[ind][1]])
+    return render_template("test.html", result=resultlist)
+
+@myapp.route('/latrangetimescached', methods=['GET'])
+def getlatrangetimescached():
+    conn = get_connection()
+    cur = conn.cursor()
+    latFrom = request.args['latFrom']
+    latTo = request.args['latTo']
+    my_range = numpy.arange(float(latFrom), float(latTo), 0.8)
+    rangelist = []
+    i = 0
+    while i < len(my_range):
+        if(i+1 >= len(my_range)):
+            break
+        rangelist.append([my_range[i], my_range[i+1]])
+        i = i + 1
+    times = request.args['times']
+    times = int(times)
+    resultlist = []
+    for x in range(times):
+        ind = random.randint(0,len(rangelist) - 1) 
+        start_time = datetime.now()
+        sql = "SELECT count(*) from earthquake WHERE latitude BETWEEN "+ str(rangelist[ind][0]) +" AND "+ str(rangelist[ind][1])
+        hash = hashlib.sha224(sql.encode('utf-8')).hexdigest()
+        key = "sql_cache:" + hash
+        # Check if data is in cache.
+        if (r.get(key)):
+            data = pickle.loads(r.get(key))
+        else:
+            # Do MySQL query   
+            cur.execute(sql)
+            data = cur.fetchone()
+            r.set(key, pickle.dumps(data))
+        end_time = datetime.now()
+        total_time = end_time - start_time
+        resultlist.append([data[0], total_time.total_seconds(), rangelist[ind][0], rangelist[ind][1]])
     return render_template("test.html", result=resultlist)
 
 def get_timezone_date(longitude, latitude, dt):
@@ -254,5 +316,5 @@ def get_timezone_date(longitude, latitude, dt):
     localDatetime = utcmoment.astimezone(pytz.timezone(str(mytimezone)))
     return localDatetime.strftime(fmt)[:-3]
 
-# if __name__ == '__main__':
-#     myapp.run(host='0.0.0.0', port=port, debug=True)
+if __name__ == '__main__':
+    myapp.run(host='0.0.0.0', port=port, debug=True)
