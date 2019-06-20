@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_mysqldb import MySQL
 import os, csv, math
 import html,json
+import numpy
 
 myapp = Flask(__name__)
 
@@ -30,6 +31,7 @@ def hello():
     return render_template("index.html", result1=res, result2=res2)
 
 
+
 @myapp.route('/random-queries', methods=['GET'])
 def get_random_queries():
     conn = get_connection()
@@ -48,28 +50,26 @@ def get_random_queries():
 def get_percent_queries():
     conn = get_connection()
     cur = conn.cursor()
-    perFrom = request.args['perFrom']
-    perTo = request.args['perTo']
+    perFrom = "40"
+    perTo = "80"
     group = request.args['group']
-    my_range = range(int(perFrom), int(perTo), int(group))
-    i = 0
-    rangelist = []
-    while(i < len(my_range)):
-        if(i+1 >= len(my_range)):
-            break
-        rangelist.append([my_range[i], my_range[i+1]])
-        i = i + 1
+    my_range = numpy.arange(int(perFrom), int(perTo), int(group))
+    my_range = list(chunks(range(int(perFrom), int(perTo)), int(group)))
     x = []
     y = []
-    for ind in range(int(group)+1):
-        sql = "SELECT SUM(PercentVote) FROM voting WHERE PercentVote BETWEEN "+str(rangelist[ind][0]) +" AND "+ str(rangelist[ind][1])
+    for myra in my_range:
+        sql = "SELECT SUM(Voted/TotalPop)*100 FROM voting WHERE (Voted/TotalPop)*100 BETWEEN "+str(myra[0]) +" AND "+ str(myra[len(myra)-1]+1)
         cur.execute(sql)
         data = cur.fetchone()
-        x.append(str(rangelist[ind][0])+"-"+str(rangelist[ind][1]))
+        x.append(str(myra[0])+"-"+str(myra[len(myra)-1]+1))
         y.append(float(data[0]) if data[0] else 0)
     data = { 'x': x, 'y': y }
-    print(data)
     return render_template("chart.html",result=data)
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 if __name__ == '__main__':
     myapp.run(host='0.0.0.0', port=port, debug=True)

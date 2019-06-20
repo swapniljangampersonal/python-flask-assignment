@@ -6,9 +6,9 @@
 
 <body>
     <center>
-        <div id="barchart"></div>
+        <!-- <div id="barchart"></div> -->
         <div id="piechart"></div>
-        <div id="scatterchart"></div>
+        <!-- <div id="scatterchart"></div> -->
     </center>
 </body>
 <script>
@@ -41,7 +41,7 @@
         title: 'Earthquake Report'
     };
 
-    Plotly.newPlot('barchart', data, layout);
+    // Plotly.newPlot('barchart', data, layout);
 
     var piedata = [{
         values: jsonData.y,
@@ -69,7 +69,7 @@
 
     var data = [trace3];
 
-    Plotly.newPlot('scatterchart', data);
+    // Plotly.newPlot('scatterchart', data);
 </script>
 
 </html>
