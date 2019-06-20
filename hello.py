@@ -63,6 +63,27 @@ def formula():
 def get_percent_queries():
     conn = get_connection()
     cur = conn.cursor()
+    perFrom = "1000"
+    perTo = "80000"
+    group = request.args['group']
+    my_range = numpy.arange(int(perFrom), int(perTo), int(group))
+    my_range = list(chunks(range(int(perFrom), int(perTo)), int(group)))
+    x = []
+    y = []
+    for myra in my_range:
+        sql = "SELECT StateName,Registered FROM voting WHERE Registered BETWEEN "+str(myra[0]) +" AND "+ str(myra[len(myra)-1]+1)
+        cur.execute(sql)
+        data = cur.fetchall()
+        for row in data:
+            x.append(row[1])
+            y.append(row[0].strip())
+    data = { 'x': x, 'y': y }
+    return render_template("chart3.html",result=data)
+
+@myapp.route('/totalbar', methods=['GET'])
+def totalbar():
+    conn = get_connection()
+    cur = conn.cursor()
     perFrom = "40"
     perTo = "80"
     group = request.args['group']
@@ -77,7 +98,7 @@ def get_percent_queries():
         x.append(str(myra[0])+"-"+str(myra[len(myra)-1]+1))
         y.append(float(data[0]) if data[0] else 0)
     data = { 'x': x, 'y': y }
-    return render_template("chart.html",result=data)
+    return render_template("chart3.html",result=data)
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""

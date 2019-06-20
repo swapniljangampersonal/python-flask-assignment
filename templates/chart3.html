@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <center>
+        <div id="barchart"></div>
+        <!-- <div id="piechart"></div> -->
+        <!-- <div id="scatterchart"></div> -->
+    </center>
+</body>
+<script>
+    var x = '{{ result|tojson|safe }}';
+    var jsonData = JSON.parse(x);
+    var xValue = jsonData.y;
+
+    var yValue = jsonData.x;
+
+    var trace1 = {
+        x: xValue,
+        y: yValue,
+        type: 'bar',
+        text: yValue.map(String),
+        textposition: 'auto',
+        hoverinfo: 'none',
+        marker: {
+            color: 'rgb(158,202,225)',
+            opacity: 0.6,
+            line: {
+                color: 'rgb(8,48,107)',
+                width: 1.5
+            }
+        }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        title: 'Report'
+    };
+
+    Plotly.newPlot('barchart', data, layout);
+</script>
+
+</html>
