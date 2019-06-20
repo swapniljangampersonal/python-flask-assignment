@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="barchart"></div>
+    <div id="piechart"></div>
+    <div id="scatterchart"></div>
+</body>
+<script>
+    var x = '{{ result|tojson|safe }}';
+    var jsonData = JSON.parse(x);
+    var xValue = jsonData.x;
+
+    var yValue = jsonData.y;
+
+    var trace1 = {
+        x: xValue,
+        y: yValue,
+        type: 'bar',
+        text: yValue.map(String),
+        textposition: 'auto',
+        hoverinfo: 'none',
+        marker: {
+            color: 'rgb(158,202,225)',
+            opacity: 0.6,
+            line: {
+                color: 'rgb(8,48,107)',
+                width: 1.5
+            }
+        }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        title: 'Earthquake Report'
+    };
+
+    Plotly.newPlot('barchart', data, layout);
+
+    var piedata = [{
+        values: jsonData.y,
+        labels: jsonData.x,
+        type: 'pie'
+    }];
+
+    var layout = {
+        height: 400,
+        width: 500
+    };
+
+    Plotly.newPlot('piechart', piedata, layout);
+
+    var trace3 = {
+        x: jsonData.x,
+        y: jsonData.y,
+        mode: 'markers',
+        type: 'scatter'
+    };
+
+    var data = [trace3];
+
+    Plotly.newPlot('scatterchart', data);
+</script>
+
+</html>
