@@ -2,13 +2,32 @@
     <head>
         <title>Something</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+            
+                td,
+                th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+            
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <meta charset="UTF-8">
     </head>
     <body>
         <center>
             <h1>Jangam, Swapnil Surendra</h1>
             <h3>1001550608</h3>
         </center>
-        <form action="/random-queries" method="GET">
+        <!-- <form action="/random-queries" method="GET">
             Magnitude Range:
             <div class="form-row">
                 <div class="form-group col-md-4">
@@ -22,6 +41,54 @@
             </div>
             <button class="btn btn-primary" id="" type="submit">Search</button>
         </form>
+        <form action="/percentvoted" method="GET">
+            % Voted
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputEmail4">From</label>
+                    <input type="text" class="form-control" name="perFrom" placeholder="% From">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputPassword4">To</label>
+                    <input type="text" class="form-control" name="perTo" placeholder="% To">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputPassword4">To</label>
+                    <input type="text" class="form-control" name="group" placeholder="Group">
+                </div>
+            </div>
+            <button class="btn btn-primary" id="" type="submit">Search</button>
+        </form> -->
+        For 5M to 10M
+        <table id="employees" style="width:100%">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+    {% if result1 %}
+        {% for row in result1 %}
+        <tr>
+                <td>{{ row[0] }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
+    For 10M to 50M
+        <table id="employees" style="width:100%">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+    {% if result2 %}
+        {% for row in result2 %}
+        <tr>
+                <td>{{ row[0] }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
     </body>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
