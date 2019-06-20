@@ -46,6 +46,19 @@ def get_random_queries():
     data = { 'x': x, 'y': y }
     return render_template("chart.html",result=data)
 
+@myapp.route('/formula', methods=['GET'])
+def formula():
+    n1 = request.args['n1']
+    n2 = request.args['n2']
+    xlist = []
+    ylist = []
+    for y in range(int(n1), int(n2)):
+        x = y*y+1
+        xlist.append(x)
+        ylist.append(y)
+    data = { 'x': xlist, 'y': ylist }
+    return render_template("chart2.html",result=data)
+
 @myapp.route('/percentvoted', methods=['GET'])
 def get_percent_queries():
     conn = get_connection()
