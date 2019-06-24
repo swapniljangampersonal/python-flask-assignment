@@ -105,5 +105,5 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
-if __name__ == '__main__':
-    myapp.run(host='0.0.0.0', port=port, debug=True)
+# if __name__ == '__main__':
+#     myapp.run(host='0.0.0.0', port=port, debug=True)
