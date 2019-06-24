@@ -14,9 +14,9 @@
 <script>
     var x = '{{ result|tojson|safe }}';
     var jsonData = JSON.parse(x);
-    var xValue = jsonData.y;
+    var xValue = jsonData.x;
 
-    var yValue = jsonData.x;
+    var yValue = jsonData.y;
 
     var trace1 = {
         x: xValue,

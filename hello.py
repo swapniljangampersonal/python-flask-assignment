@@ -64,19 +64,19 @@ def get_percent_queries():
     conn = get_connection()
     cur = conn.cursor()
     perFrom = "1000"
-    perTo = "80000"
+    perTo = "30000"
     group = request.args['group']
-    my_range = numpy.arange(int(perFrom), int(perTo), int(group))
-    my_range = list(chunks(range(int(perFrom), int(perTo)), int(group)))
+    my_range = numpy.arange(int(perFrom), int(perTo), int(group)*1000)
+    my_range = list(chunks(range(int(perFrom), int(perTo)), int(group)*1000))
     x = []
     y = []
     for myra in my_range:
-        sql = "SELECT StateName,Registered FROM voting WHERE Registered BETWEEN "+str(myra[0]) +" AND "+ str(myra[len(myra)-1]+1)
+        sql = "SELECT COUNT(StateName) FROM voting WHERE Registered BETWEEN "+str(myra[0]) +" AND "+ str(myra[len(myra)-1]+1)
         cur.execute(sql)
         data = cur.fetchall()
         for row in data:
-            x.append(row[1])
-            y.append(row[0].strip())
+            x.append(str(myra[0])+"-"+str(myra[len(myra)-1]+1))
+            y.append(row[0])
     data = { 'x': x, 'y': y }
     return render_template("chart3.html",result=data)
 
